@@ -12,7 +12,7 @@ class CfCompiler
         number = i.zero? ? '' : (i + 1)
         name = 'EC2Instance' + number.to_s
         EC2_Instance(name) do
-          ImageId 'ami-b97a12ce'
+          ImageId options[:image_id]
           InstanceType options[:instance_type]
           SecurityGroups [Ref('InstanceSecurityGroup')]
         end
