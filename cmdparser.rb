@@ -3,9 +3,10 @@
 require 'ipaddress'
 require 'optparse'
 
-# Commentaar
+# Use optionparser to handle options
 class CmdParser
   def self.parse(args)
+    # defaults
     options = {
       instances: 1,
       instance_type: 't2.micro',
@@ -33,6 +34,7 @@ class CmdParser
         '--allow-ssh-from IP',
         'The ipaddress to allow ssh access'
       ) do |v|
+        # use ipaddress for IP -> CIDR
         host = IPAddress::IPv4.new v
         options[:allow_ssh_from] = host.to_string
       end
@@ -55,7 +57,7 @@ class CmdParser
         options[:stack_name] = v
       end
       opts.on(
-        '--file-output PATH',
+        '--file-output FILENAME',
         'Store Cloudformation template on disk'
       ) do |v|
         options[:file_output] = v
@@ -67,7 +69,6 @@ class CmdParser
       puts e
       exit 1
     end
-
     options
   end
 end
