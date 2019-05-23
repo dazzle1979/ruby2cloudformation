@@ -26,14 +26,16 @@ else
 end
 
 # validate JSON with AWS and create stack if create_stack is true
-resp = cf_client.validate_template(template_body: json.to_json)
-if options[:create_stack].to_s == 'true' && resp.successful?
-  puts 'Cloudformation JSON valid, creating stack:'
-  resp = cf_client.create_stack(
-    stack_name: options[:stack_name],
-    template_body: json.to_json
-  )
-  puts resp.stack_id
-elsif !resp.successful?
-  puts 'Cloudformation JSON template invalid'
+if options[:create_stack].to_s == 'true'
+  resp = cf_client.validate_template(template_body: json.to_json)
+  if resp.successful?
+    puts 'Cloudformation JSON valid, creating stack:'
+    resp = cf_client.create_stack(
+      stack_name: options[:stack_name],
+      template_body: json.to_json
+    )
+    puts resp.stack_id
+  elsif !resp.successful?
+    puts 'Cloudformation JSON template invalid'
+  end
 end
