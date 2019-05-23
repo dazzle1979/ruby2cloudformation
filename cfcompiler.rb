@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 require 'cfndsl'
 
+# Commentaar
 class CfCompiler
-  def self.compile (options) 
+  def self.compile(options)
     json = CloudFormation do
       Output('PublicIP') do
         Description 'Public IP address of the newly created EC2 instance'
