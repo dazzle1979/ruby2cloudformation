@@ -33,7 +33,15 @@ class CfCompiler
               'FromPort' => '22',
               'IpProtocol' => 'tcp',
               'ToPort' => '22'
-            }
+            },
+            if options[:public] == 'true'
+              {
+                'CidrIp' => '0.0.0.0/0',
+                'FromPort' => '80',
+                'IpProtocol' => 'tcp',
+                'ToPort' => '80'
+              }
+            end
           ]
         )
         Type 'AWS::EC2::SecurityGroup'

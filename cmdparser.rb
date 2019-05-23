@@ -14,7 +14,8 @@ class CmdParser
       image_id: 'ami-b97a12ce',
       create_stack: 'false',
       stack_name: 'bas_stack',
-      file_output: ''
+      file_output: '',
+      public: 'false'
     }
     parser = OptionParser.new do |opts|
       opts.banner = 'Usage: assignment.rb [options]'
@@ -61,6 +62,12 @@ class CmdParser
         'Store Cloudformation template on disk'
       ) do |v|
         options[:file_output] = v
+      end
+      opts.on(
+        '--public BOOLEAN',
+        'Publish on port 80 (true) '
+      ) do |v|
+        options[:public] = v
       end
     end
     begin
