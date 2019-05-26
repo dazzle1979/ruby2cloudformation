@@ -25,25 +25,37 @@ class CfCompiler
           'GroupDescription',
           'Enable SSH access and HTTP access on the inbound port'
         )
-        Property(
-          'SecurityGroupIngress',
-          [
-            {
-              'CidrIp' => options[:allow_ssh_from],
-              'FromPort' => '22',
-              'IpProtocol' => 'tcp',
-              'ToPort' => '22'
-            },
-            if options[:public] == 'true'
+        if options[:public] == 'true'
+          Property(
+            'SecurityGroupIngress',
+            [
+              {
+                'CidrIp' => options[:allow_ssh_from],
+                'FromPort' => '22',
+                'IpProtocol' => 'tcp',
+                'ToPort' => '22'
+              },
               {
                 'CidrIp' => '0.0.0.0/0',
                 'FromPort' => '80',
                 'IpProtocol' => 'tcp',
                 'ToPort' => '80'
               }
-            end
-          ]
-        )
+            ]
+          )
+        else
+          Property(
+            'SecurityGroupIngress',
+            [
+              {
+                'CidrIp' => options[:allow_ssh_from],
+                'FromPort' => '22',
+                'IpProtocol' => 'tcp',
+                'ToPort' => '22'
+              }
+            ]
+          )
+        end
         Type 'AWS::EC2::SecurityGroup'
       end
     end
