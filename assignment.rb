@@ -27,15 +27,33 @@ end
 
 # validate JSON with AWS and create stack if create_stack is true
 if options[:create_stack].to_s == 'true'
-  resp = cf_client.validate_template(template_body: json.to_json)
-  if resp.successful?
+  resp_validate = cf_client.validate_template(template_body: json.to_json)
+  if resp_validate.successful?
     puts 'Cloudformation JSON valid, creating stack:'
-    resp = cf_client.create_stack(
+    resp_create = cf_client.create_stack(
       stack_name: options[:stack_name],
       template_body: json.to_json
     )
-    puts resp.stack_id
-  elsif !resp.successful?
+    check_stack = true
+    while check_stack do
+      resp_describe = cf_client.describe_stacks(
+        stack_name: options[:stack_name]
+      )
+      if resp_describe.stacks[0].stack_status != 'CREATE_IN_PROGRESS'
+        if resp_describe.stacks[0].stack_status == 'CREATE_COMPLETE'
+          puts 'Stack creation successful, PublicIP:'
+          puts resp_describe.stacks[0].outputs[0].output_value
+        else resp_describe.stacks[0].stack_status != 'CREATE_IN_PROGRESS'
+          puts 'Stack creation failed with status:'
+          puts resp_describe.stacks[0].stack_status
+        end
+        check_stack = false
+      else
+        puts resp_describe.stacks[0].stack_status
+      end
+      sleep 2
+    end
+  elsif !resp_validate.successful?
     puts 'Cloudformation JSON template invalid'
   end
 end
