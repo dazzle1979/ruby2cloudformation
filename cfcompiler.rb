@@ -23,7 +23,7 @@ class CfCompiler
       Resource('InstanceSecurityGroup') do
         Property(
           'GroupDescription',
-          'Enable SSH access and HTTP access on the inbound port'
+          'Enable SSH access via port 22'
         )
         if options[:public] == 'true'
           Property(

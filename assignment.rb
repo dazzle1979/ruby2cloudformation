@@ -30,17 +30,18 @@ def check_stack(cf_client, stack_name)
   resp_describe = cf_client.describe_stacks(
     stack_name: stack_name
   )
-  if resp_describe.stacks[0].stack_status != 'CREATE_IN_PROGRESS'
-    if resp_describe.stacks[0].stack_status == 'CREATE_COMPLETE'
+  status = resp_describe.stacks[0].stack_status
+  if status != 'CREATE_IN_PROGRESS'
+    if status == 'CREATE_COMPLETE'
       puts 'Stack creation successful, PublicIP:'
       puts resp_describe.stacks[0].outputs[0].output_value
     else
       puts 'Stack creation failed with status:'
-      puts resp_describe.stacks[0].stack_status
+      puts status
     end
     return false
   else
-    puts resp_describe.stacks[0].stack_status
+    puts status
     return true
   end
 end
